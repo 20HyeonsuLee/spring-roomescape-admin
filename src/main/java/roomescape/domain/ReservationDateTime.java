@@ -14,7 +14,7 @@ public class ReservationDateTime {
             final ReservationDate reservationDate,
             final ReservationTime reservationTime,
             final Clock clock
-            ) {
+    ) {
         this.reservationDate = Objects.requireNonNull(reservationDate, "예약 날짜는 null일 수 없습니다.");
         this.reservationTime = Objects.requireNonNull(reservationTime, "예약 시간은 null일 수 없습니다.");
         if (!this.isAfter(LocalDateTime.now(clock))) {

@@ -26,15 +26,8 @@ public class ReservationDao {
 
     public List<Reservation> getReservations() {
         String sql = """
-                SELECT 
-                    r.id as reservation_id, 
-                    r.name, 
-                    r.date, 
-                    t.id as time_id, 
-                    t.start_at as time_value 
-                FROM reservation as r 
-                inner join reservation_time as t 
-                on r.time_id = t.id
+                SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value
+                FROM reservation as r inner join reservation_time as t on r.time_id = t.id
                 """;
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
@@ -49,10 +42,9 @@ public class ReservationDao {
 
     public Reservation createReservation(final ReservationName name, final ReservationDateTime dateTime) {
         String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
-        String[] resultColumns = {"id"};
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, resultColumns);
+            PreparedStatement statement = connection.prepareStatement(sql, new String[] {"id"});
             statement.setString(1, name.getValue());
             statement.setString(2, dateTime.date().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             statement.setLong(3, dateTime.reservationTime().id());
@@ -67,8 +59,7 @@ public class ReservationDao {
     }
 
     public void deleteReservationById(final Long id) {
-        String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 
     private LocalDate parseDate(final String date) {

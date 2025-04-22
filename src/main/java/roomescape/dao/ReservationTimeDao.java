@@ -21,10 +21,9 @@ public class ReservationTimeDao {
 
     public ReservationTime createTime(final LocalTime time) {
         String sql = "insert into reservation_time(start_at) values(?)";
-        String[] resultColumns = {"id"};
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, resultColumns);
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
             statement.setString(1, time.format(DateTimeFormatter.ofPattern("HH:mm")));
             return statement;
         }, keyHolder);
