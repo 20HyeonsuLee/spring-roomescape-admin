@@ -5,14 +5,17 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import roomescape.config.JdbcTemplateInitializer;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
 
 public class ReservationFixture {
-    private final JdbcTemplate jdbcTemplate = JdbcTemplateInitializer.getJdbcTemplate();
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationFixture(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Reservation 예약_한스_25_4_22(ReservationTime reservationTime) {
         ReservationName reservationName = ReservationNameFixture.한스;

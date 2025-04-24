@@ -11,12 +11,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.common.SpringBootTestBase;
 import roomescape.config.TestClockConfig;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
@@ -26,18 +28,21 @@ import roomescape.fixture.ReservationDateFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@Import(TestClockConfig.class)
-class ReservationApiTest {
+class ReservationApiTest extends SpringBootTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     Clock clock;
 
-    private final ReservationTimeFixture reservationTimeFixture = new ReservationTimeFixture();
-    private final ReservationFixture reservationFixture = new ReservationFixture();
+    private ReservationTimeFixture reservationTimeFixture;
+    private ReservationFixture reservationFixture;
+
+    @BeforeEach
+    void setUp() {
+        reservationTimeFixture = new ReservationTimeFixture(jdbcTemplate);
+        reservationFixture = new ReservationFixture(jdbcTemplate);
+    }
 
     @Test
     void 예약_정보를_조회한다() {

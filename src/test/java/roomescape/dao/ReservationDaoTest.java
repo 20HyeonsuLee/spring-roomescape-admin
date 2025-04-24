@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.common.Constant;
 import roomescape.common.DbTest;
+import roomescape.config.JdbcTemplateInitializer;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationTime;
@@ -18,7 +19,9 @@ import roomescape.fixture.ReservationTimeFixture;
 
 class ReservationDaoTest extends DbTest {
     private ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-    private final ReservationTimeFixture reservationTimeFixture = new ReservationTimeFixture();
+    private final ReservationTimeFixture reservationTimeFixture = new ReservationTimeFixture(
+            JdbcTemplateInitializer.getJdbcTemplate()
+    );
     private ReservationTime reservationTime ;
     private final LocalDateTime 오늘_이후_25년_4월_22일_10시 = LocalDateTime.of(2025, 4, 22, 10, 0);
 

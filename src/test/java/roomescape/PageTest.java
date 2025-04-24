@@ -4,10 +4,9 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.common.SpringBootTestBase;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class PageTest {
+class PageTest extends SpringBootTestBase {
 
     @Test
     void 어드민_페이지를_조회시_200을_반환한다() {

@@ -9,24 +9,28 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.common.SpringBootTestBase;
 import roomescape.config.TestClockConfig;
 import roomescape.domain.ReservationTime;
+import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@Import(TestClockConfig.class)
-class ReservationTimeApiTest {
+class ReservationTimeApiTest extends SpringBootTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final ReservationTimeFixture reservationTimeFixture = new ReservationTimeFixture();
+    private ReservationTimeFixture reservationTimeFixture;
 
+    @BeforeEach
+    void setUp() {
+        reservationTimeFixture = new ReservationTimeFixture(jdbcTemplate);
+    }
     @Test
     void 예약_시간을_생성한다() {
         RestAssured.given().log().all()
