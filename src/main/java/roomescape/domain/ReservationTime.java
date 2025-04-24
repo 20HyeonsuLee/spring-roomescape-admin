@@ -19,4 +19,20 @@ public class ReservationTime {
     public LocalTime time() {
         return time;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ReservationTime that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, time);
+    }
 }
