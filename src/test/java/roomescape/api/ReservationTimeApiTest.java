@@ -37,9 +37,12 @@ class ReservationTimeApiTest extends SpringBootTestBase {
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
+
         SoftAssertions softly = new SoftAssertions();
+
         List<ReservationTime> allReservationTime = findAllReservationTime();
         softly.assertThat(allReservationTime).hasSize(1);
+
         ReservationTime reservationTime = allReservationTime.getFirst();
         softly.assertThat(reservationTime.id()).isEqualTo(1L);
         softly.assertThat(reservationTime.time()).isEqualTo(LocalTime.of(10, 0, 0));
@@ -48,14 +51,18 @@ class ReservationTimeApiTest extends SpringBootTestBase {
     @Test
     void 예약_시간을_조회한다() {
         ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
         SoftAssertions softly = new SoftAssertions();
+
         List<ReservationTime> allReservationTime = findAllReservationTime();
         softly.assertThat(allReservationTime).hasSize(1);
+
         ReservationTime savedReservation = allReservationTime.getFirst();
         softly.assertThat(savedReservation.id()).isEqualTo(reservationTime.id());
         softly.assertThat(savedReservation.time()).isEqualTo(reservationTime.time());
@@ -64,6 +71,7 @@ class ReservationTimeApiTest extends SpringBootTestBase {
     @Test
     void 예약_시간을_삭제한다() {
         reservationTimeFixture.예약시간_10시();
+
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
@@ -72,7 +80,7 @@ class ReservationTimeApiTest extends SpringBootTestBase {
     }
 
 
-    public List<ReservationTime> findAllReservationTime() {
+    private List<ReservationTime> findAllReservationTime() {
         return jdbcTemplate.query("select * from reservation_time", (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")

@@ -30,7 +30,9 @@ class ReservationTimeDaoTest extends DbTest {
     @Test
     void 예약_시간을_삭제한다() {
         reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
+
         reservationTimeDao.deleteById(1L);
+
         Long count = getReservationCount();
         assertThat(count).isEqualTo(0);
     }
@@ -38,9 +40,12 @@ class ReservationTimeDaoTest extends DbTest {
     @Test
     void 모든_예약을_조회한다() {
         reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
+
         SoftAssertions softly = new SoftAssertions();
+
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         softly.assertThat(reservationTimes).hasSize(1);
+
         ReservationTime reservationTime = reservationTimes.getFirst();
         softly.assertThat(reservationTime.id()).isEqualTo(1L);
         softly.assertThat(reservationTime.time()).isEqualTo(오늘_이후_25년_4월_22일_10시.toLocalTime());

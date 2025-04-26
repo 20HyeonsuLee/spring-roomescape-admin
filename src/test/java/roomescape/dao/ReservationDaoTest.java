@@ -54,7 +54,9 @@ class ReservationDaoTest extends DbTest {
                         Constant.FIXED_CLOCK
                 )
         );
+
         reservationDao.deleteById(reservationTime.id());
+
         Long count = getReservationCount();
         assertThat(count).isEqualTo(0);
     }
@@ -69,9 +71,12 @@ class ReservationDaoTest extends DbTest {
                         Constant.FIXED_CLOCK
                 )
         );
-        List<Reservation> reservations = reservationDao.findAll();
+
         SoftAssertions softly = new SoftAssertions();
+
+        List<Reservation> reservations = reservationDao.findAll();
         softly.assertThat(reservations).hasSize(1);
+
         Reservation reservation = reservations.getFirst();
         softly.assertThat(reservation.date()).isEqualTo(오늘_이후_25년_4월_22일_10시.toLocalDate());
         softly.assertThat(reservation.id()).isEqualTo(1L);
