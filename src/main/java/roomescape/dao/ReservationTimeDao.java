@@ -1,33 +1,34 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert timeInsert;
 
     public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.timeInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime createTime(final LocalTime time) {
-        String sql = "insert into reservation_time(start_at) values(?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, time.format(DateTimeFormatter.ofPattern("HH:mm")));
-            return statement;
-        }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), time);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("start_at", time.format(DateTimeFormatter.ofPattern("HH:mm")));
+
+        Number newId = timeInsert.executeAndReturnKey(parameters);
+        return new ReservationTime(newId.longValue(), time);
     }
 
     public List<ReservationTime> findAllTimes() {

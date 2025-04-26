@@ -1,14 +1,12 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
@@ -19,9 +17,13 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> getReservations() {
@@ -41,17 +43,15 @@ public class ReservationDao {
     }
 
     public Reservation createReservation(final ReservationName name, final ReservationDateTime dateTime) {
-        String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[] {"id"});
-            statement.setString(1, name.getValue());
-            statement.setString(2, dateTime.date().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            statement.setLong(3, dateTime.reservationTime().id());
-            return statement;
-        }, keyHolder);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name.getValue());
+        parameters.put("date", dateTime.date());
+        parameters.put("time_id", dateTime.reservationTime().id());
+
+        Number newId = reservationInsert.executeAndReturnKey(parameters);
+
         return new Reservation(
-                Objects.requireNonNull(keyHolder.getKey()).longValue(),
+                newId.longValue(),
                 name,
                 dateTime.reservationDate(),
                 dateTime.reservationTime()

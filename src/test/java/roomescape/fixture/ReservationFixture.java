@@ -1,36 +1,37 @@
 package roomescape.fixture;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
 
 public class ReservationFixture {
-    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
 
     public ReservationFixture(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Reservation 예약_한스_25_4_22(ReservationTime reservationTime) {
         ReservationName reservationName = ReservationNameFixture.한스;
         LocalDate reservationDate = LocalDate.of(2025, 4, 22);
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, reservationName.getValue());
-            statement.setString(2, reservationDate.toString());
-            statement.setLong(3, reservationTime.id());
-            return statement;
-        }, keyHolder);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservationName.getValue());
+        parameters.put("date", reservationDate.toString());
+        parameters.put("time_id", reservationTime.id());
+
+        Number newId = reservationInsert.executeAndReturnKey(parameters);
+
         return new Reservation(
-                keyHolder.getKey().longValue(),
+                newId.longValue(),
                 reservationName,
                 new ReservationDate(reservationDate),
                 reservationTime
