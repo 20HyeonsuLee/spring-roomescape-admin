@@ -32,7 +32,7 @@ class ReservationDaoTest extends DbTest {
 
     @Test
     void 예약을_생성한다() {
-        reservationDao.createReservation(
+        reservationDao.save(
                 ReservationNameFixture.한스,
                 new ReservationDateTime(
                         ReservationDateFixture.예약일_25_4_22,
@@ -46,7 +46,7 @@ class ReservationDaoTest extends DbTest {
 
     @Test
     void 예약을_삭제한다() {
-        reservationDao.createReservation(
+        reservationDao.save(
                 ReservationNameFixture.한스,
                 new ReservationDateTime(
                         ReservationDateFixture.예약일_25_4_22,
@@ -54,14 +54,14 @@ class ReservationDaoTest extends DbTest {
                         Constant.FIXED_CLOCK
                 )
         );
-        reservationDao.deleteReservationById(reservationTime.id());
+        reservationDao.deleteById(reservationTime.id());
         Long count = getReservationCount();
         assertThat(count).isEqualTo(0);
     }
 
     @Test
     void 예약을_조회한다() {
-        reservationDao.createReservation(
+        reservationDao.save(
                 ReservationNameFixture.한스,
                 new ReservationDateTime(
                         ReservationDateFixture.예약일_25_4_22,
@@ -69,7 +69,7 @@ class ReservationDaoTest extends DbTest {
                         Constant.FIXED_CLOCK
                 )
         );
-        List<Reservation> reservations = reservationDao.getReservations();
+        List<Reservation> reservations = reservationDao.findAll();
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(reservations).hasSize(1);
         Reservation reservation = reservations.getFirst();

@@ -18,15 +18,15 @@ public class ReservationTimeService {
     public ReservationTimeResponse createReservationTime(
             final CreateReservationTimeRequest createReservationTimeRequest
     ) {
-        ReservationTime reservationTime = reservationTimeDao.createTime(createReservationTimeRequest.startAt());
+        ReservationTime reservationTime = reservationTimeDao.save(createReservationTimeRequest.startAt());
         return ReservationTimeResponse.from(reservationTime);
     }
 
     public List<ReservationTimeResponse> findAllReservationTime() {
-        return ReservationTimeResponse.from(reservationTimeDao.findAllTimes());
+        return ReservationTimeResponse.from(reservationTimeDao.findAll());
     }
 
     public void deleteReservationById(final Long id) {
-        reservationTimeDao.deleteTimeById(id);
+        reservationTimeDao.deleteById(id);
     }
 }

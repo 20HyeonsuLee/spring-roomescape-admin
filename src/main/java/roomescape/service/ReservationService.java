@@ -30,13 +30,13 @@ public class ReservationService {
     }
 
     public void deleteReservationById(final Long id) {
-        reservationDao.deleteReservationById(id);
+        reservationDao.deleteById(id);
     }
 
     public ReservationResponse createReservation(final CreateReservationRequest createReservationRequest) {
-        ReservationTime reservationTime = reservationTimeDao.findTime(createReservationRequest.timeId())
+        ReservationTime reservationTime = reservationTimeDao.findById(createReservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약시간입니다."));
-        Reservation savedReservation = reservationDao.createReservation(
+        Reservation savedReservation = reservationDao.save(
                 new ReservationName(createReservationRequest.name()),
                 new ReservationDateTime(
                         new ReservationDate(createReservationRequest.date()),
@@ -48,6 +48,6 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> getAllReservations() {
-        return ReservationResponse.from(reservationDao.getReservations());
+        return ReservationResponse.from(reservationDao.findAll());
     }
 }

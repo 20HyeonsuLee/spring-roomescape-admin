@@ -22,23 +22,23 @@ class ReservationTimeDaoTest extends DbTest {
 
     @Test
     void 예약시간을_생성한다() {
-        reservationTimeDao.createTime(오늘_이후_25년_4월_22일_10시.toLocalTime());
+        reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
         Long count = getReservationCount();
         assertThat(count).isEqualTo(1);
     }
 
     @Test
     void 예약_시간을_삭제한다() {
-        reservationTimeDao.createTime(오늘_이후_25년_4월_22일_10시.toLocalTime());
-        reservationTimeDao.deleteTimeById(1L);
+        reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
+        reservationTimeDao.deleteById(1L);
         Long count = getReservationCount();
         assertThat(count).isEqualTo(0);
     }
 
     @Test
     void 모든_예약을_조회한다() {
-        reservationTimeDao.createTime(오늘_이후_25년_4월_22일_10시.toLocalTime());
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAllTimes();
+        reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(reservationTimes).hasSize(1);
         ReservationTime reservationTime = reservationTimes.getFirst();
@@ -50,14 +50,14 @@ class ReservationTimeDaoTest extends DbTest {
     @Test
     @DisplayName("예약이 존재하는 경우")
     void 예약을_단일_조회한다1() {
-        reservationTimeDao.createTime(오늘_이후_25년_4월_22일_10시.toLocalTime());
-        assertThat(reservationTimeDao.findTime(1L)).isPresent();
+        reservationTimeDao.save(오늘_이후_25년_4월_22일_10시.toLocalTime());
+        assertThat(reservationTimeDao.findById(1L)).isPresent();
     }
 
     @Test
     @DisplayName("예약이 존재하지 않는 경우")
     void 예약을_단일_조회한다2() {
-        assertThat(reservationTimeDao.findTime(1L)).isNotPresent();
+        assertThat(reservationTimeDao.findById(1L)).isNotPresent();
     }
 
     private Long getReservationCount() {

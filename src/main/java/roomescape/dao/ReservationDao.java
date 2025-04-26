@@ -24,7 +24,7 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         String sql = """
                 SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value
                 FROM reservation as r inner join reservation_time as t on r.time_id = t.id
@@ -40,7 +40,7 @@ public class ReservationDao {
         ));
     }
 
-    public Reservation createReservation(final ReservationName name, final ReservationDateTime dateTime) {
+    public Reservation save(final ReservationName name, final ReservationDateTime dateTime) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", name.getValue());
         parameters.put("date", dateTime.date());
@@ -56,7 +56,7 @@ public class ReservationDao {
         );
     }
 
-    public void deleteReservationById(final Long id) {
+    public void deleteById(final Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

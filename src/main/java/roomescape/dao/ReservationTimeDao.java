@@ -23,7 +23,7 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime createTime(final LocalTime time) {
+    public ReservationTime save(final LocalTime time) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", time.format(DateTimeFormatter.ofPattern("HH:mm")));
 
@@ -31,14 +31,14 @@ public class ReservationTimeDao {
         return new ReservationTime(newId.longValue(), time);
     }
 
-    public List<ReservationTime> findAllTimes() {
+    public List<ReservationTime> findAll() {
         return jdbcTemplate.query("select * from reservation_time", (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")
         ));
     }
 
-    public Optional<ReservationTime> findTime(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
@@ -47,7 +47,7 @@ public class ReservationTimeDao {
         return reservationTimes.stream().findFirst();
     }
 
-    public void deleteTimeById(final Long id) {
+    public void deleteById(final Long id) {
         jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }
 }
