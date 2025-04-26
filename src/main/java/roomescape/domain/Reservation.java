@@ -16,10 +16,10 @@ public class Reservation {
             final ReservationDate date,
             final ReservationTime time
     ) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this.id = Objects.requireNonNull(id, "예약의 id는 null일 수 없습니다.");
+        this.name = Objects.requireNonNull(name, "예약의 이름는 null일 수 없습니다.");
+        this.date = Objects.requireNonNull(date, "예약의 날짜는 null일 수 없습니다.");
+        this.time = Objects.requireNonNull(time, "예약의 시간는 null일 수 없습니다.");
     }
 
     public Long id() {
@@ -50,12 +50,11 @@ public class Reservation {
         if (!(o instanceof Reservation that)) {
             return false;
         }
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, time);
+        return Objects.hashCode(id);
     }
 }
