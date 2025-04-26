@@ -12,14 +12,9 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.SpringBootTestBase;
-import roomescape.config.TestClockConfig;
 import roomescape.domain.ReservationTime;
-import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
 
 class ReservationTimeApiTest extends SpringBootTestBase {
@@ -80,7 +75,7 @@ class ReservationTimeApiTest extends SpringBootTestBase {
     public List<ReservationTime> findAllReservationTime() {
         return jdbcTemplate.query("select * from reservation_time", (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
+                resultSet.getString("start_at")
         ));
     }
 }

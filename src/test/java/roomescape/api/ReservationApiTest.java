@@ -99,10 +99,10 @@ class ReservationApiTest extends SpringBootTestBase {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 new ReservationName(resultSet.getString("name")),
-                new ReservationDate(LocalDate.parse(resultSet.getString("date"))),
+                new ReservationDate(resultSet.getString("date")),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        LocalTime.parse(resultSet.getString("time_value"))
+                        resultSet.getString("time_value")
                 )
         ));
     }

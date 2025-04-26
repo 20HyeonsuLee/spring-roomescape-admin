@@ -34,7 +34,7 @@ public class ReservationTimeDao {
     public List<ReservationTime> findAllTimes() {
         return jdbcTemplate.query("select * from reservation_time", (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
+                resultSet.getString("start_at")
         ));
     }
 
@@ -42,7 +42,7 @@ public class ReservationTimeDao {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
+                resultSet.getString("start_at")
         ), id);
         return reservationTimes.stream().findFirst();
     }

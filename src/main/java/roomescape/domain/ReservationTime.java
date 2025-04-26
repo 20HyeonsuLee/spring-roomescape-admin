@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class ReservationTime {
@@ -10,6 +11,11 @@ public class ReservationTime {
     public ReservationTime(final Long id, final LocalTime time) {
         this.id = Objects.requireNonNull(id, "예약 id는 null일 수 없습니다.");
         this.time = Objects.requireNonNull(time, "예약 시간은 null일 수 없습니다.");
+    }
+
+    public ReservationTime(final Long id, final String time) {
+        this.id = Objects.requireNonNull(id, "예약 id는 null일 수 없습니다.");
+        this.time = parseTime(Objects.requireNonNull(time, "예약 시간은 null일 수 없습니다."));
     }
 
     public Long id() {
@@ -34,5 +40,13 @@ public class ReservationTime {
     @Override
     public int hashCode() {
         return Objects.hash(id, time);
+    }
+
+    private LocalTime parseTime(String time) {
+        try {
+            return LocalTime.parse(time);
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("예약 날짜 형식을 확인해주세요.");
+        }
     }
 }

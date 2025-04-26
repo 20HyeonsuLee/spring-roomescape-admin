@@ -1,7 +1,5 @@
 package roomescape.dao;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +32,10 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 new ReservationName(resultSet.getString("name")),
-                new ReservationDate(parseDate(resultSet.getString("date"))),
+                new ReservationDate(resultSet.getString("date")),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        parseTime(resultSet.getString("time_value"))
+                        resultSet.getString("time_value")
                 )
         ));
     }
@@ -60,13 +58,5 @@ public class ReservationDao {
 
     public void deleteReservationById(final Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
-    }
-
-    private LocalDate parseDate(final String date) {
-        return LocalDate.parse(date);
-    }
-
-    private LocalTime parseTime(final String time) {
-        return LocalTime.parse(time);
     }
 }

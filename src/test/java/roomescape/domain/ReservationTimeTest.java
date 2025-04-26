@@ -17,8 +17,11 @@ class ReservationTimeTest {
 
     @Test
     void 예약시간은_null일_수_없다() {
+        // given
+        LocalTime time = null;
+
         // when & then
-        assertThatThrownBy(() -> new ReservationTime(1L,null))
+        assertThatThrownBy(() -> new ReservationTime(1L, time))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("예약 시간은 null일 수 없습니다.");
     }
