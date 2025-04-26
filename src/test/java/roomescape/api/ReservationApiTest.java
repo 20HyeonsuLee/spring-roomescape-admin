@@ -6,7 +6,6 @@ import static roomescape.fixture.ReservationNameFixture.한스;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
