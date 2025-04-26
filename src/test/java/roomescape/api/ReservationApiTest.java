@@ -7,20 +7,14 @@ import static roomescape.fixture.ReservationNameFixture.한스;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.common.SpringBootTestBase;
-import roomescape.config.TestClockConfig;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationName;
@@ -32,9 +26,6 @@ import roomescape.fixture.ReservationTimeFixture;
 class ReservationApiTest extends SpringBootTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    Clock clock;
 
     private ReservationTimeFixture reservationTimeFixture;
     private ReservationFixture reservationFixture;
@@ -49,6 +40,7 @@ class ReservationApiTest extends SpringBootTestBase {
     void 예약_정보를_조회한다() {
         ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
         reservationFixture.예약_한스_25_4_22(reservationTime);
+
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -59,6 +51,7 @@ class ReservationApiTest extends SpringBootTestBase {
     @Test
     void 예약_정보를_생성한다() {
         ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
@@ -70,9 +63,12 @@ class ReservationApiTest extends SpringBootTestBase {
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
-        List<Reservation> allReservation = getAllReservation();
+
         SoftAssertions softly = new SoftAssertions();
+
+        List<Reservation> allReservation = getAllReservation();
         softly.assertThat(allReservation).hasSize(1);
+
         Reservation reservation = allReservation.getFirst();
         softly.assertThat(reservation.id()).isEqualTo(1);
         softly.assertThat(reservation.name()).isEqualTo(한스.getValue());
@@ -83,11 +79,13 @@ class ReservationApiTest extends SpringBootTestBase {
     @Test
     void 예약_정보를_삭제한다() {
         ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+
         reservationFixture.예약_한스_25_4_22(reservationTime);
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
+
         assertThat(getAllReservation()).hasSize(0);
     }
 
