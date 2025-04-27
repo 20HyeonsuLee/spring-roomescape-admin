@@ -1,11 +1,13 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import roomescape.common.Constant;
 
@@ -57,7 +59,7 @@ class ReservationDateTimeTest {
         ReservationTime time = new ReservationTime(1L, now.toLocalTime());
 
         // when & then
-        assertThatCode(() -> new ReservationDateTime(futureDate, time, clock));
+        assertDoesNotThrow(() -> new ReservationDateTime(futureDate, time, clock));
     }
 
     @Test
@@ -79,7 +81,7 @@ class ReservationDateTimeTest {
         ReservationTime futureTime = new ReservationTime(1L, now.toLocalTime().plusHours(1));
 
         // when & then
-        assertThatCode(() -> new ReservationDateTime(today, futureTime, clock));    }
+        assertDoesNotThrow(() -> new ReservationDateTime(today, futureTime, clock));    }
 
     @Test
     void 같은_날_과거_시간의_예약은_isAfter가_아니다() {
