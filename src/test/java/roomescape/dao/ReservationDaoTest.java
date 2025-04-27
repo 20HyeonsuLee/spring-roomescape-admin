@@ -15,11 +15,11 @@ import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.ReservationDateFixture;
 import roomescape.fixture.ReservationNameFixture;
-import roomescape.fixture.ReservationTimeFixture;
+import roomescape.fixture.ReservationTimeDbFixture;
 
 class ReservationDaoTest extends DbTest {
     private ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-    private final ReservationTimeFixture reservationTimeFixture = new ReservationTimeFixture(
+    private final ReservationTimeDbFixture reservationTimeDbFixture = new ReservationTimeDbFixture(
             JdbcTemplateInitializer.getJdbcTemplate()
     );
     private ReservationTime reservationTime ;
@@ -27,7 +27,7 @@ class ReservationDaoTest extends DbTest {
 
     @BeforeEach
     void setup() {
-        reservationTime = reservationTimeFixture.예약시간_10시();
+        reservationTime = reservationTimeDbFixture.예약_시간_생성_10시();
     }
 
     @Test

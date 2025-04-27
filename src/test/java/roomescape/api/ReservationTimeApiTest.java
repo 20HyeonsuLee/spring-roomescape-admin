@@ -15,16 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.common.SpringBootTestBase;
 import roomescape.domain.ReservationTime;
-import roomescape.fixture.ReservationTimeFixture;
+import roomescape.fixture.ReservationTimeDbFixture;
 
 class ReservationTimeApiTest extends SpringBootTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private ReservationTimeFixture reservationTimeFixture;
+    private ReservationTimeDbFixture reservationTimeDbFixture;
 
     @BeforeEach
     void setUp() {
-        reservationTimeFixture = new ReservationTimeFixture(jdbcTemplate);
+        reservationTimeDbFixture = new ReservationTimeDbFixture(jdbcTemplate);
     }
     @Test
     void 예약_시간을_생성한다() {
@@ -50,7 +50,7 @@ class ReservationTimeApiTest extends SpringBootTestBase {
 
     @Test
     void 예약_시간을_조회한다() {
-        ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+        ReservationTime reservationTime = reservationTimeDbFixture.예약_시간_생성_10시();
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -70,7 +70,7 @@ class ReservationTimeApiTest extends SpringBootTestBase {
 
     @Test
     void 예약_시간을_삭제한다() {
-        reservationTimeFixture.예약시간_10시();
+        reservationTimeDbFixture.예약_시간_생성_10시();
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

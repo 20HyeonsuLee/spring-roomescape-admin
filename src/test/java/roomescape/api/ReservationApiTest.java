@@ -19,26 +19,26 @@ import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.ReservationDateFixture;
-import roomescape.fixture.ReservationFixture;
-import roomescape.fixture.ReservationTimeFixture;
+import roomescape.fixture.ReservationDbFixture;
+import roomescape.fixture.ReservationTimeDbFixture;
 
 class ReservationApiTest extends SpringBootTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ReservationTimeFixture reservationTimeFixture;
-    private ReservationFixture reservationFixture;
+    private ReservationTimeDbFixture reservationTimeDbFixture;
+    private ReservationDbFixture reservationDbFixture;
 
     @BeforeEach
     void setUp() {
-        reservationTimeFixture = new ReservationTimeFixture(jdbcTemplate);
-        reservationFixture = new ReservationFixture(jdbcTemplate);
+        reservationTimeDbFixture = new ReservationTimeDbFixture(jdbcTemplate);
+        reservationDbFixture = new ReservationDbFixture(jdbcTemplate);
     }
 
     @Test
     void 예약_정보를_조회한다() {
-        ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
-        reservationFixture.예약_한스_25_4_22(reservationTime);
+        ReservationTime reservationTime = reservationTimeDbFixture.예약_시간_생성_10시();
+        reservationDbFixture.예약_생성_한스_25_4_22(reservationTime);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -49,7 +49,7 @@ class ReservationApiTest extends SpringBootTestBase {
 
     @Test
     void 예약_정보를_생성한다() {
-        ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+        ReservationTime reservationTime = reservationTimeDbFixture.예약_시간_생성_10시();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -77,9 +77,9 @@ class ReservationApiTest extends SpringBootTestBase {
 
     @Test
     void 예약_정보를_삭제한다() {
-        ReservationTime reservationTime = reservationTimeFixture.예약시간_10시();
+        ReservationTime reservationTime = reservationTimeDbFixture.예약_시간_생성_10시();
 
-        reservationFixture.예약_한스_25_4_22(reservationTime);
+        reservationDbFixture.예약_생성_한스_25_4_22(reservationTime);
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()

@@ -10,16 +10,16 @@ import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
 
-public class ReservationFixture {
+public class ReservationDbFixture {
     private final SimpleJdbcInsert reservationInsert;
 
-    public ReservationFixture(final JdbcTemplate jdbcTemplate) {
+    public ReservationDbFixture(final JdbcTemplate jdbcTemplate) {
         this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation 예약_한스_25_4_22(ReservationTime reservationTime) {
+    public Reservation 예약_생성_한스_25_4_22(ReservationTime reservationTime) {
         ReservationName reservationName = ReservationNameFixture.한스;
         LocalDate reservationDate = LocalDate.of(2025, 4, 22);
 
