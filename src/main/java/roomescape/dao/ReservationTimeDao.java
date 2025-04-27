@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -15,6 +16,10 @@ import roomescape.domain.ReservationTime;
 public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert timeInsert;
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            resultSet.getString("start_at")
+    );
 
     public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,18 +37,12 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query("select * from reservation_time", (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        ));
+        return jdbcTemplate.query("select * from reservation_time", RESERVATION_TIME_ROW_MAPPER);
     }
 
     public Optional<ReservationTime> findById(final Long id) {
         String sql = "select * from reservation_time where id = ?";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        ), id);
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER, id);
         return reservationTimes.stream().findFirst();
     }
 
